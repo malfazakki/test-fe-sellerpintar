@@ -6,46 +6,42 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { RegisterFormData, registerSchema } from "@/lib/validation/register.validation";
+import { LoginFormData, loginSchema } from "@/lib/validation/login.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 
-export default function RegisterForm() {
+export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const {
 		register,
 		handleSubmit,
-		setValue,
-		watch,
 		formState: { errors, isSubmitting },
-	} = useForm<RegisterFormData>({
-		resolver: zodResolver(registerSchema),
+	} = useForm<LoginFormData>({
+		resolver: zodResolver(loginSchema),
 		defaultValues: {
 			username: "",
 			password: "",
-			role: "User",
 		},
 	});
 
-	const onSubmit = async (data: RegisterFormData) => {
+	const onSubmit = async (data: LoginFormData) => {
 		try {
 			console.log("Form submitted:", data);
 
-			const response = await axios.post("https://test-fe.mysellerpintar.com/api/auth/register", data);
-			console.log("Registration successful:", response.data);
-			alert("Registration successful!");
+			const response = await axios.post("https://test-fe.mysellerpintar.com/api/auth/login", data);
+			console.log("Login successful:", response.data);
+			alert("Login successful!");
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
-			console.error("Registration failed:", error);
+			console.error("Login failed:", error);
 			if (axios.isAxiosError(error) && error.response) {
-				alert(`Registration failed: ${error.response.data.message || error.message}`);
+				alert(`Login failed: ${error.response.data.message || error.message}`);
 			} else {
-				alert(`Registration failed: ${error.message}`);
+				alert(`Login failed: ${error.message}`);
 			}
 		}
 	};
@@ -118,60 +114,28 @@ export default function RegisterForm() {
 						</div>
 
 						{/* Role Field */}
-						<div className='space-y-1 mb-6'>
-							<Label htmlFor='role' className='text-sm font-medium'>
-								Role
-							</Label>
-							<Select
-								defaultValue={watch("role") || "User"}
-								onValueChange={(value) => setValue("role", value)}
-							>
-								<SelectTrigger className={`w-full ${errors.role ? "border-red-500" : ""}`}>
-									<SelectValue placeholder='Select Role'>
-										{watch("role") === "Admin"
-											? "Admin"
-											: watch("role") === "User"
-											? "User"
-											: "Select Role"}
-									</SelectValue>
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem className='cursor-pointer' value='Admin'>
-										Admin
-									</SelectItem>
-									<SelectItem className='cursor-pointer' value='User'>
-										User
-									</SelectItem>
-								</SelectContent>
-							</Select>
-							{errors.role && (
-								<div className='flex items-center text-red-500 text-sm'>
-									<span>{errors.role.message}</span>
-								</div>
-							)}
-						</div>
 
-						{/* Register Button */}
+						{/* Login Button */}
 						<Button
 							onClick={handleSubmit(onSubmit)}
 							disabled={isSubmitting}
-							className='w-full text-white font-medium py-2 px-4 rounded-md transition-colors'
+							className='mt-6 w-full text-white font-medium py-2 px-4 rounded-md transition-colors'
 						>
-							{isSubmitting ? "Registering..." : "Register"}
+							{isSubmitting ? "Signing..." : "Login"}
 						</Button>
 					</div>
 
 					{/* Login Link */}
 					<div className='text-center mt-6'>
 						<p className='text-sm text-gray-600'>
-							Already have an account?{" "}
+							Don&apos;t have an account?{" "}
 							<Link
-								href='/login'
+								href='/register'
 								type='button'
 								onClick={() => console.log("Navigate to login")}
 								className='text-blue-600 hover:text-blue-700 font-medium underline'
 							>
-								Login
+								Register
 							</Link>
 						</p>
 					</div>
