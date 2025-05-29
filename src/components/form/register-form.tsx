@@ -9,25 +9,37 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { RegisterFormData, registerSchema } from "@/lib/validation/register.validation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
-	const [formData, setFormData] = useState({
-		username: "",
-		password: "",
-		role: "",
+
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		watch,
+		formState: { errors, isSubmitting },
+	} = useForm<RegisterFormData>({
+		resolver: zodResolver(registerSchema),
+		defaultValues: {
+			username: "",
+			password: "",
+			role: "user",
+		},
 	});
 
-	const handleSubmit = () => {
-		console.log("Form submitted:", formData);
-		// Handle form submission logic here
-	};
-
-	const handleInputChange = (field: string, value: string) => {
-		setFormData((prev) => ({
-			...prev,
-			[field]: value,
-		}));
+	const onSubmit = async (data: RegisterFormData) => {
+		try {
+			console.log("Form submitted:", data);
+			// Simulate API call
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			alert("Registration successful!");
+		} catch (error) {
+			console.error("Registration failed:", error);
+		}
 	};
 
 	return (
@@ -48,7 +60,7 @@ export default function RegisterForm() {
 				<CardContent className='space-y-6'>
 					<div className='space-y-3'>
 						{/* Username Field */}
-						<div className='space-y-2'>
+						<div className='space-y-1'>
 							<Label htmlFor='username' className='text-sm font-medium'>
 								Username
 							</Label>
@@ -56,14 +68,20 @@ export default function RegisterForm() {
 								id='username'
 								type='text'
 								placeholder='Input username'
-								value={formData.username}
-								onChange={(e) => handleInputChange("username", e.target.value)}
-								className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+								{...register("username")}
+								className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+									errors.username ? "border-red-500" : "border-gray-300"
+								}`}
 							/>
+							{errors.username && (
+								<div className='flex items-center text-red-500 text-sm'>
+									<span>{errors.username.message}</span>
+								</div>
+							)}
 						</div>
 
 						{/* Password Field */}
-						<div className='space-y-2'>
+						<div className='space-y-1'>
 							<Label htmlFor='password' className='text-sm font-medium'>
 								Password
 							</Label>
@@ -72,9 +90,10 @@ export default function RegisterForm() {
 									id='password'
 									type={showPassword ? "text" : "password"}
 									placeholder='Input password'
-									value={formData.password}
-									onChange={(e) => handleInputChange("password", e.target.value)}
-									className='w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+									{...register("password")}
+									className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+										errors.password ? "border-red-500" : "border-gray-300"
+									}`}
 								/>
 								<div
 									onClick={() => setShowPassword(!showPassword)}
@@ -83,16 +102,30 @@ export default function RegisterForm() {
 									{showPassword ? <Eye className='h-4 w-4' /> : <EyeOff className='h-4 w-4' />}
 								</div>
 							</div>
+							{errors.password && (
+								<div className='flex items-center text-red-500 text-sm'>
+									<span>{errors.password.message}</span>
+								</div>
+							)}
 						</div>
 
 						{/* Role Field */}
-						<div className='space-y-2 mb-6'>
+						<div className='space-y-1 mb-6'>
 							<Label htmlFor='role' className='text-sm font-medium'>
 								Role
 							</Label>
-							<Select onValueChange={(value) => handleInputChange("role", value)}>
-								<SelectTrigger className='w-full cursor-pointer'>
-									<SelectValue placeholder='Select Role' />
+							<Select
+								defaultValue={watch("role") || "user"}
+								onValueChange={(value) => setValue("role", value)}
+							>
+								<SelectTrigger className={`w-full ${errors.role ? "border-red-500" : ""}`}>
+									<SelectValue placeholder='Select Role'>
+										{watch("role") === "admin"
+											? "Admin"
+											: watch("role") === "user"
+											? "User"
+											: "Select Role"}
+									</SelectValue>
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem className='cursor-pointer' value='admin'>
@@ -103,14 +136,20 @@ export default function RegisterForm() {
 									</SelectItem>
 								</SelectContent>
 							</Select>
+							{errors.role && (
+								<div className='flex items-center text-red-500 text-sm'>
+									<span>{errors.role.message}</span>
+								</div>
+							)}
 						</div>
 
 						{/* Register Button */}
 						<Button
-							onClick={handleSubmit}
+							onClick={handleSubmit(onSubmit)}
+							disabled={isSubmitting}
 							className='w-full text-white font-medium py-2 px-4 rounded-md transition-colors'
 						>
-							Register
+							{isSubmitting ? "Registering..." : "Register"}
 						</Button>
 					</div>
 
