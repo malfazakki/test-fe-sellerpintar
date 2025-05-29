@@ -12,9 +12,11 @@ import { useForm } from "react-hook-form";
 import { LoginFormData, loginSchema } from "@/lib/validation/login.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useModalStore } from "@/store/modalStore";
 
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
+	const { openModal } = useModalStore();
 
 	const {
 		register,
@@ -34,15 +36,15 @@ export default function LoginForm() {
 
 			const response = await axios.post("https://test-fe.mysellerpintar.com/api/auth/login", data);
 			console.log("Login successful:", response.data);
-			alert("Login successful!");
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Login failed:", error);
+			let errorMessage = "An unexpected error occurred.";
 			if (axios.isAxiosError(error) && error.response) {
-				alert(`Login failed: ${error.response.data.message || error.message}`);
-			} else {
-				alert(`Login failed: ${error.message}`);
+				errorMessage = error.response.data.message || error.message;
+			} else if (error instanceof Error) {
+				errorMessage = error.message;
 			}
+			openModal("error", { title: "Login failed", description: `Login failed: ${errorMessage}` });
 		}
 	};
 

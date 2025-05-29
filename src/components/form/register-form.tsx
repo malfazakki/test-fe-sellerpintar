@@ -13,9 +13,11 @@ import { useForm } from "react-hook-form";
 import { RegisterFormData, registerSchema } from "@/lib/validation/register.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useModalStore } from "@/store/modalStore";
 
 export default function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
+	const { openModal } = useModalStore();
 
 	const {
 		register,
@@ -38,14 +40,20 @@ export default function RegisterForm() {
 
 			const response = await axios.post("https://test-fe.mysellerpintar.com/api/auth/register", data);
 			console.log("Registration successful:", response.data);
-			alert("Registration successful!");
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			openModal("success", { title: "Success", description: `Registration Success` });
 		} catch (error: any) {
 			console.error("Registration failed:", error);
 			if (axios.isAxiosError(error) && error.response) {
-				alert(`Registration failed: ${error.response.data.message || error.message}`);
+				openModal("error", {
+					title: "Error",
+					description: `Registration failed: ${error.response.data.message || error.message}`,
+				});
 			} else {
 				alert(`Registration failed: ${error.message}`);
+				openModal("error", {
+					title: "Error",
+					description: `Registration failed: ${error.message}`,
+				});
 			}
 		}
 	};
