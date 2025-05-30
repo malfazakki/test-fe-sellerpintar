@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "./file-upload";
 import Link from "next/link";
+import { RichTextEditor } from "@/components/editor/tiptap";
 
 export default function CreateArticleForm() {
 	const router = useRouter();
@@ -130,15 +131,19 @@ export default function CreateArticleForm() {
 				<Label htmlFor='content' className='text-sm font-medium'>
 					Content
 				</Label>
-				<Input
-					id='content'
-					type='text'
-					placeholder='Type a content...'
-					{...register("content")}
-					className={`w-full bg-white px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent `}
+				<Controller
+					name='content'
+					control={control}
+					render={({ field }) => (
+						<RichTextEditor
+							value={field.value}
+							onChange={field.onChange}
+							placeholder='Start writing your content...'
+						/>
+					)}
 				/>
 				{errors.content && (
-					<div className='flex items-center text-red-500 text-sm'>
+					<div className='flex items-center text-red-500 text-sm mt-1'>
 						<span>{errors.content.message}</span>
 					</div>
 				)}
