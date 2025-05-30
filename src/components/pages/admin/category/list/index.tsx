@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon, Plus, Search } from "lucide-react";
 import CategoryListTable from "./table";
 import { PaginationCustom } from "@/components/custom-ui/pagination-custom";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -111,16 +112,35 @@ export default function AdminCategoryList() {
 							</Button>
 						</div>
 
-						{error || <CategoryListTable categories={categories} />}
-						{error !== null && <span className='text-center'>Error occured...</span>}
+						{!error ? (
+							<CategoryListTable categories={categories} />
+						) : (
+							<div className='p-10'>
+								<Alert variant='destructive'>
+									<AlertCircleIcon />
+									<AlertTitle>Unable to load categories.</AlertTitle>
+									<AlertDescription>
+										<p>Unknown error occured. Please contact administrator.</p>
+									</AlertDescription>
+								</Alert>
+							</div>
+						)}
+
+						{loading && (
+							<div className='p-20'>
+								<p className='text-center animate-bounce'>Loading Data...</p>
+							</div>
+						)}
 					</CardContent>
 					<CardFooter>
-						<PaginationCustom
-							currentPage={currentPage}
-							totalItems={totalCategories}
-							itemsPerPage={10}
-							onPageChange={setCurrentPage}
-						/>
+						{!error && !loading ? (
+							<PaginationCustom
+								currentPage={currentPage}
+								totalItems={totalCategories}
+								itemsPerPage={10}
+								onPageChange={setCurrentPage}
+							/>
+						) : null}
 					</CardFooter>
 				</Card>
 			</div>
