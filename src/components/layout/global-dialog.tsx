@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { useModalStore } from "@/store/modalStore";
 import { useEffect, useState } from "react";
+import { ConfirmLogout } from "@/components/custom-ui/confirm-logout-dialog";
+import { DeleteDialog } from "../custom-ui/delete-dialog";
 
 export function GlobalDialog() {
 	const { isOpen, modalType, modalProps, closeModal } = useModalStore();
@@ -27,60 +29,72 @@ export function GlobalDialog() {
 		setIsDialogOpen(open);
 	};
 
+	const renderModalContent = () => {
+		switch (modalType) {
+			case "error":
+				return (
+					<>
+						<DialogContent className='sm:max-w-[425px]'>
+							<DialogHeader>
+								<DialogTitle>Error</DialogTitle>
+								<DialogDescription>{modalProps.description || "An error occurred."}</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<Button onClick={closeModal} variant='outline' className='w-full'>
+									Close
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</>
+				);
+			case "custom":
+				return (
+					<>
+						<DialogContent className='sm:max-w-[425px]'>
+							<DialogHeader>
+								<DialogTitle>{modalProps.title || "Custom Dialog"}</DialogTitle>
+								<DialogDescription>
+									{modalProps.description || "This is a custom dialog."}
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<Button onClick={closeModal} variant='outline' className='w-full'>
+									Close
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</>
+				);
+			case "success":
+				return (
+					<>
+						<DialogContent className='sm:max-w-[425px]'>
+							<DialogHeader>
+								<DialogTitle>{modalProps.title || "Success"}</DialogTitle>
+								<DialogDescription>
+									{modalProps.description || "This is a custom dialog."}
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<Button onClick={closeModal} variant='outline' className='w-full'>
+									Close
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					</>
+				);
+			case "delete":
+				return <DeleteDialog modalProps={modalProps} />;
+			case "confirmLogout":
+				return <ConfirmLogout />;
+			default:
+				return null;
+		}
+	};
+
 	return (
 		<Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-			{/* <DialogTrigger asChild>
-				<Button variant='outline'>Edit Profile</Button>
-			</DialogTrigger> */}
-			<DialogContent className='sm:max-w-[425px]'>
-				{modalType === "error" && (
-					<>
-						<DialogHeader>
-							<DialogTitle>Error</DialogTitle>
-							<DialogDescription>{modalProps.description || "An error occurred."}</DialogDescription>
-						</DialogHeader>
-						<DialogFooter>
-							<Button onClick={closeModal} variant='outline' className='w-full'>
-								Close
-							</Button>
-						</DialogFooter>
-					</>
-				)}
-
-				{/* Add other modal types here if needed */}
-
-				{modalType === "custom" && (
-					<>
-						<DialogHeader>
-							<DialogTitle>{modalProps.title || "Custom Dialog"}</DialogTitle>
-							<DialogDescription>
-								{modalProps.description || "This is a custom dialog."}
-							</DialogDescription>
-						</DialogHeader>
-						<DialogFooter>
-							<Button onClick={closeModal} variant='outline' className='w-full'>
-								Close
-							</Button>
-						</DialogFooter>
-					</>
-				)}
-
-				{modalType === "success" && (
-					<>
-						<DialogHeader>
-							<DialogTitle>{modalProps.title || "Success"}</DialogTitle>
-							<DialogDescription>
-								{modalProps.description || "This is a custom dialog."}
-							</DialogDescription>
-						</DialogHeader>
-						<DialogFooter>
-							<Button onClick={closeModal} variant='outline' className='w-full'>
-								Close
-							</Button>
-						</DialogFooter>
-					</>
-				)}
-			</DialogContent>
+			{renderModalContent()}
 		</Dialog>
 	);
 }
