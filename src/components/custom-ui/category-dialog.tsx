@@ -5,7 +5,8 @@ import EditCategoryForm from "../form/edit-category-form";
 interface CategoryDialogProps {
 	modalProps: {
 		type: "create" | "edit";
-		onSubmitForm: () => void;
+		id: string | number;
+		name: string;
 	};
 }
 
@@ -15,7 +16,11 @@ export default function CategoryDialog({ modalProps }: CategoryDialogProps) {
 			<DialogHeader>
 				<DialogTitle>{modalProps?.type === "create" ? "Add Category" : "Edit Category"}</DialogTitle>
 			</DialogHeader>
-			{modalProps?.type === "create" ? <CreateCategoryForm /> : <EditCategoryForm />}
+			{modalProps?.type === "create" ? (
+				<CreateCategoryForm />
+			) : (
+				<EditCategoryForm id={modalProps.id} name={modalProps.name} />
+			)}
 			{/* <DialogFooter className='flex sm:justify-end justify-center'>
 				<Button variant='outline' onClick={closeModal}>
 					Cancel
