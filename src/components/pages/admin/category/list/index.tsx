@@ -10,6 +10,7 @@ import CategoryListTable from "./table";
 import { PaginationCustom } from "@/components/custom-ui/pagination-custom";
 import { useDebounce } from "@/hooks/use-debounce";
 import { CategoriesApiResponse, Category } from "@/types/categoryTypes";
+import { useModalStore } from "@/store/modalStore";
 
 export default function AdminCategoryList() {
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -20,6 +21,8 @@ export default function AdminCategoryList() {
 
 	// Search state
 	const [searchQuery, setSearchQuery] = useState("");
+
+	const { openModal } = useModalStore();
 
 	// Debounce the search query with 500ms
 	const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -70,6 +73,10 @@ export default function AdminCategoryList() {
 		}
 	}, [currentPage, debouncedSearchQuery]);
 
+	const handleClickAdd = () => {
+		openModal("categoryDialog", { type: "create" });
+	};
+
 	// Trigger fetch when search or page changes
 	useEffect(() => {
 		fetchCategories();
@@ -106,7 +113,7 @@ export default function AdminCategoryList() {
 								</div>
 							</div>
 
-							<Button variant='default' size='lg'>
+							<Button variant='default' size='lg' onClick={handleClickAdd}>
 								<Plus className='' />
 								Add Category
 							</Button>
