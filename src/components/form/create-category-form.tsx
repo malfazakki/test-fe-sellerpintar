@@ -1,3 +1,5 @@
+
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
@@ -7,6 +9,7 @@ import { Button } from "../ui/button";
 import { useModalStore } from "@/store/modalStore";
 import { CategoryFormData, categorySchema } from "@/lib/validation/category.validation";
 import api from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CreateCategoryForm() {
 	const {
@@ -21,11 +24,12 @@ export default function CreateCategoryForm() {
 	});
 
 	const { closeModal } = useModalStore();
+	const queryClient = useQueryClient();
 
 	const onSubmit = async (data: CategoryFormData) => {
 		await api.post("/categories", data);
 		closeModal();
-		window.location.reload();
+		queryClient.invalidateQueries({ queryKey: ["categories"] });
 	};
 
 	return (

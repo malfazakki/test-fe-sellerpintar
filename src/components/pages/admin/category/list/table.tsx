@@ -6,20 +6,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import Link from "next/link";
 import { Category } from "@/types/categoryTypes";
 import { useModalStore } from "@/store/modalStore";
-import { useRouter } from "next/navigation";
 import api from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ArticleListTableProps {
 	categories: Category[];
 }
 
 export default function CategoryListTable({ categories }: ArticleListTableProps) {
+	const queryClient = useQueryClient();
 	const { openModal } = useModalStore();
-	const router = useRouter();
 
 	const deleteData = async (id: string | number) => {
 		await api.delete(`/categories/${id}`);
-		router.refresh();
+		queryClient.invalidateQueries({ queryKey: ["categories"] });
 	};
 
 	const handleDelete = (id: string | number, name: string) => {
