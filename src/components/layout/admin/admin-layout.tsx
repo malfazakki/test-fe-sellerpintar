@@ -1,41 +1,34 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { type ReactNode } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface RootLayoutAdminProps {
 	children: ReactNode;
+	headerTitle?: string;
 }
 
-export default function AdminLayout({ children }: RootLayoutAdminProps) {
+export default function AdminLayout({ children, headerTitle }: RootLayoutAdminProps) {
 	return (
 		<SidebarProvider>
 			<AppSidebar />
 			<SidebarInset className='bg-secondary'>
-				<header className='flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-white'>
-					<SidebarTrigger className='-ml-1' />
-					<Separator orientation='vertical' className='mr-2 data-[orientation=vertical]:h-4' />
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem className='hidden md:block'>
-								<BreadcrumbLink href='#'>Building Your Application</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator className='hidden md:block' />
-							<BreadcrumbItem>
-								<BreadcrumbPage>Data Fetching</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
+				<header className='flex h-[68px] shrink-0 items-center gap-2 border-b px-6 bg-white justify-between'>
+					<div className='flex items-center gap-3'>
+						<h1 className='text-xl font-semibold'>{headerTitle}</h1>
+					</div>
+
+					<div className='flex items-center gap-[6px]'>
+						<Avatar className='h-8 w-8'>
+							<AvatarImage src='/avatars/01.png' alt='@shadcn' />
+							<AvatarFallback className='bg-blue-200'>J</AvatarFallback>
+						</Avatar>
+						<div>
+							<p className='text-sm font-medium leading-none underline'>James Dean</p>
+						</div>
+					</div>
 				</header>
-				{children}
+				<main className='p-6'>{children}</main>
 			</SidebarInset>
 		</SidebarProvider>
 	);

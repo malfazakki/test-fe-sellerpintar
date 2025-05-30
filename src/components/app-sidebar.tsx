@@ -28,11 +28,6 @@ const items = [
 		path: "/admin/categories",
 		icon: Tag,
 	},
-	{
-		title: "Logout",
-		path: "/admin/logout",
-		icon: LogOut,
-	},
 ];
 
 export function AppSidebar() {
@@ -64,6 +59,20 @@ export function AppSidebar() {
 									</SidebarMenuItem>
 								);
 							})}
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									asChild
+									className='cursor-pointer text-white hover:bg-sidebar-primary hover:text-white font-medium py-5'
+									tooltip={"Logout"}
+									size='default'
+									type='button'
+								>
+									<span>
+										<LogOut />
+										Logout
+									</span>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
