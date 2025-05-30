@@ -1,10 +1,15 @@
+"use client";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { dummyArticles } from "@/lib/dummy-data/articles";
 import Image from "next/image";
 import Link from "next/link";
 import { Article } from "@/types/articleTypes";
 
-export default function ArticleListTable() {
+interface ArticleListTableProps {
+	articles: Article[];
+}
+
+export default function ArticleListTable({ articles }: ArticleListTableProps) {
 	return (
 		<>
 			<Table className='border-b-1'>
@@ -18,11 +23,11 @@ export default function ArticleListTable() {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{dummyArticles.map((article: Article) => (
+					{articles.map((article: Article) => (
 						<TableRow key={article.id}>
 							<TableCell className='font-medium text-center align-center'>
 								<Image
-									src={article.thumbnail}
+									src={article.imageUrl}
 									alt={article.title}
 									width={60}
 									height={60}
@@ -30,8 +35,12 @@ export default function ArticleListTable() {
 								/>
 							</TableCell>
 							<TableCell className='align-center whitespace-normal'>{article.title}</TableCell>
-							<TableCell className='text-center align-center'>{article.category}</TableCell>
-							<TableCell className='text-center align-center'>{article.createdAt}</TableCell>
+							<TableCell className='align-center text-center whitespace-normal'>
+								{article.category.name}
+							</TableCell>
+							<TableCell className='align-center text-center whitespace-normal'>
+								{article.createdAt ? new Date(article.createdAt).toLocaleString() : "-"}
+							</TableCell>
 							<TableCell className='text-center align-center'>
 								<Link
 									href={`/admin/articles/preview/${article.id}`}

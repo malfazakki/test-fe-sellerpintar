@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
 			{
 				hostname: "images.pexels.com",
 			},
+			{
+				hostname: "s3.sellerpintar.com",
+			},
 		],
 	},
 };
