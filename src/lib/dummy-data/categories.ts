@@ -1,0 +1,76 @@
+export const categoryDummyData = [
+	{
+		data: [
+			{
+				id: "",
+				userId: "d80e40ed-9236-49d8-b4b8-d6f1ffaae868",
+				name: "Management",
+				createdAt: "2025-05-10T18:38:02.392Z",
+				updatedAt: "2025-05-10T18:38:02.392Z",
+			},
+			{
+				id: "0fa2608c-86df-48fe-89f4-6133af8cb2e0",
+				userId: "96c0157e-a321-4bb4-b1aa-12c791787f71",
+				name: "Education",
+				createdAt: "2025-05-29T17:46:39.287Z",
+				updatedAt: "2025-05-29T17:46:39.287Z",
+			},
+			{
+				id: "1e8a175f-6536-4572-befa-491be3c2e3fa",
+				userId: "96c0157e-a321-4bb4-b1aa-12c791787f71",
+				name: "Programming",
+				createdAt: "2025-05-29T12:24:22.525Z",
+				updatedAt: "2025-05-29T12:24:22.525Z",
+			},
+			{
+				id: "3a7876b1-de23-44ac-93e7-589fd4be6dfb",
+				userId: "96c0157e-a321-4bb4-b1aa-12c791787f71",
+				name: "Tutorial",
+				createdAt: "2025-05-29T17:29:27.344Z",
+				updatedAt: "2025-05-29T17:29:27.344Z",
+			},
+			{
+				id: "4c3a08e3-72df-4fc1-9c94-b0b8ec79bcec",
+				userId: "55b0a361-45d1-476e-bdfd-fad0e86315e5",
+				name: "Traveling",
+				createdAt: "2025-05-24T23:21:54.463Z",
+				updatedAt: "2025-05-29T18:10:23.131Z",
+			},
+			{
+				id: "4f518ef2-21c1-4846-a79a-d830a9ab6414",
+				userId: "c2cfd62c-132c-4494-8887-683b344524d0",
+				name: "Health",
+				createdAt: "2025-05-10T05:49:50.870Z",
+				updatedAt: "2025-05-29T18:09:28.078Z",
+			},
+			{
+				id: "57e92208-65fb-439e-b912-a47d52e0e2a2",
+				userId: "96c0157e-a321-4bb4-b1aa-12c791787f71",
+				name: "Technology",
+				createdAt: "2025-05-29T16:09:05.278Z",
+				updatedAt: "2025-05-29T16:09:05.278Z",
+			},
+			{
+				id: "6aad96f5-7501-443b-a178-041b9073d03f",
+				userId: "96c0157e-a321-4bb4-b1aa-12c791787f71",
+				name: "Film and Series",
+				createdAt: "2025-05-29T12:25:16.327Z",
+				updatedAt: "2025-05-30T06:55:08.563Z",
+			},
+			{
+				id: "7a648976-2c62-4920-965c-cecb8ec3dcab",
+				userId: "96c0157e-a321-4bb4-b1aa-12c791787f71",
+				name: "Politic",
+				createdAt: "2025-05-29T12:03:18.565Z",
+				updatedAt: "2025-05-29T12:03:18.565Z",
+			},
+			{
+				id: "a408e922-57bc-40de-a29f-832ea97d8f23",
+				userId: "55b0a361-45d1-476e-bdfd-fad0e86315e5",
+				name: "Religion",
+				createdAt: "2025-05-24T23:23:41.449Z",
+				updatedAt: "2025-05-24T23:23:41.449Z",
+			},
+		],
+	},
+];

@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import Image from "next/image";
 import Link from "next/link";
 import { Article } from "@/types/articleTypes";
+import dayjs from "dayjs";
 
 interface ArticleListTableProps {
 	articles: Article[];
@@ -39,22 +40,22 @@ export default function ArticleListTable({ articles }: ArticleListTableProps) {
 								{article.category.name}
 							</TableCell>
 							<TableCell className='align-center text-center whitespace-normal'>
-								{article.createdAt ? new Date(article.createdAt).toLocaleString() : "-"}
+								{article.createdAt ? dayjs(article.createdAt).format("MMMM D, YYYY HH:mm:ss") : "-"}
 							</TableCell>
 							<TableCell className='text-center align-center'>
 								<Link
 									href={`/admin/articles/preview/${article.id}`}
-									className='text-blue-600 hover:underline mr-2'
+									className='text-blue-600 underline mr-2'
 								>
 									Preview
 								</Link>
 								<Link
 									href={`/admin/articles/edit/${article.id}`}
-									className='text-blue-600 hover:underline mr-2'
+									className='text-blue-600 underline mr-2'
 								>
 									Edit
 								</Link>
-								<button className='text-red-600 hover:underline'>Delete</button>
+								<button className='text-red-600 underline'>Delete</button>
 							</TableCell>
 						</TableRow>
 					))}

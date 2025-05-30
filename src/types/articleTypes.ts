@@ -1,30 +1,21 @@
-export interface User {
-	id: string;
-	username: string;
-	role: "User" | "Admin";
-}
-
-export interface Category {
-	id: string;
-	name: string;
-	userId: string;
-	createdAt: string;
-	updatedAt: string;
-}
+import { Category } from "./categoryTypes";
+import { ApiResponse } from "./genericTypes";
+import { User } from "./userTypes";
 
 export interface Article {
-	id: number;
+	id: string;
+	userId: string;
+	categoryId: string;
 	title: string;
 	content: string;
 	category: Category;
+	user: User;
 	createdAt: string;
 	updatedAt: string;
 	imageUrl: string;
 }
 
-export interface ArticlesApiResponse {
-	data: Article[];
-	page: number;
-	limit: number;
-	total: number;
-}
+// Generic API Response Type
+
+// Type aliases for convenience
+export type ArticlesApiResponse = ApiResponse<Article>;

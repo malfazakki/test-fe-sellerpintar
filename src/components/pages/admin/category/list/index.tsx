@@ -4,20 +4,17 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search } from "lucide-react";
-import ArticleListTable from "./table";
+import CategoryListTable from "./table";
 import { PaginationCustom } from "@/components/custom-ui/pagination-custom";
-import { Article } from "@/types/articleTypes";
-import { dummyArticles } from "@/lib/dummy-data/articles";
 import { useDebounce } from "@/hooks/use-debounce";
-import { ApiResponse } from "@/types/genericTypes";
+import { CategoriesApiResponse, Category } from "@/types/categoryTypes";
 
-export default function AdminArticleList() {
-	const [articles, setArticles] = useState<Article[]>([]);
+export default function AdminCategoryList() {
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [totalArticle, setTotalArticle] = useState(0);
+	const [totalCategories, setTotalCategories] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	// Search state
@@ -26,53 +23,47 @@ export default function AdminArticleList() {
 	// Debounce the search query with 500ms
 	const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-	// Fetch articles with search and pagination
-	const fetchArticles = useCallback(async () => {
+	// Fetch categories with search and pagination
+	const fetchCategories = useCallback(async () => {
 		try {
 			setLoading(true);
 			const params = new URLSearchParams({
+				search: debouncedSearchQuery,
 				page: currentPage.toString(),
 				limit: "10",
-				title: debouncedSearchQuery,
 			});
 
-			const response = await fetch(`https://test-fe.mysellerpintar.com/api/articles?${params.toString()}`);
+			const response = await fetch(`https://test-fe.mysellerpintar.com/api/categories?${params.toString()}`);
 
 			if (!response.ok) {
-				throw new Error(`Error fetching articles: ${response.statusText}`);
+				throw new Error(`Error fetching categories: ${response.statusText}`);
 			}
 
-			const data: ApiResponse<Article> = await response.json();
+			const data: CategoriesApiResponse = await response.json();
 
 			// Log the full API response for debugging
 			console.log("API Response:", {
 				data: data.data,
-				page: data.page,
+				page: data.currentPage,
 				limit: data.limit,
-				total: data.total,
+				total: data.totalData,
 			});
 
-			setArticles(data.data);
-			setTotalArticle(data.total);
+			setCategories(data.data);
+			setTotalCategories(data.totalData);
 
 			// Ensure current page is within total pages
-			const totalPages = Math.ceil(data.total / data.limit);
+			const totalPages = Math.ceil(data.totalData / data.limit);
 			if (currentPage > totalPages) {
 				setCurrentPage(totalPages || 1);
 			}
 
 			setError(null);
 		} catch (err) {
-			console.error("Failed to fetch articles:", err);
-			setError("Failed to load articles. Using dummy data.");
-
-			// Filter dummy data based on search
-			const filteredDummyArticles = dummyArticles.filter((article) =>
-				debouncedSearchQuery ? article.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) : true
-			);
-
-			setArticles(filteredDummyArticles);
-			setTotalArticle(filteredDummyArticles.length);
+			console.error("Failed to fetch categories:", err);
+			setError("Failed to load categories.");
+			setCategories([]);
+			setTotalCategories(0);
 		} finally {
 			setLoading(false);
 		}
@@ -80,30 +71,19 @@ export default function AdminArticleList() {
 
 	// Trigger fetch when search or page changes
 	useEffect(() => {
-		fetchArticles();
-	}, [fetchArticles]);
+		fetchCategories();
+	}, [fetchCategories]);
 
 	return (
 		<>
 			<div className='container mx-auto'>
 				<Card>
 					<CardHeader className='border-b-1 pb-4'>
-						<CardTitle>
-							Total Article: {loading ? "..." : error ? dummyArticles.length : totalArticle}
-						</CardTitle>
+						<CardTitle>Total Category: {loading ? "..." : totalCategories}</CardTitle>
 					</CardHeader>
 					<CardContent className='p-0'>
 						<div className='border-b-1 flex flex-wrap justify-between px-6 pb-6'>
 							<div className='flex gap-2'>
-								<Select>
-									<SelectTrigger className='w-[180px] cursor-pointer'>
-										<SelectValue placeholder='Select Category' />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>{/* Placeholder for future category selection */}</SelectGroup>
-									</SelectContent>
-								</Select>
-
 								<div className='flex space-x-2 items-center'>
 									<div className='relative'>
 										<Search
@@ -112,7 +92,7 @@ export default function AdminArticleList() {
 										/>
 										<Input
 											type='text'
-											placeholder='Search by title'
+											placeholder='Search by name'
 											className='pl-10 w-full max-w-[240px]'
 											value={searchQuery}
 											onChange={(e) => {
@@ -127,16 +107,17 @@ export default function AdminArticleList() {
 
 							<Button variant='default' size='lg'>
 								<Plus className='' />
-								Add Articles
+								Add Category
 							</Button>
 						</div>
 
-						<ArticleListTable articles={articles} />
+						{error || <CategoryListTable categories={categories} />}
+						{error !== null && <span className='text-center'>Error occured...</span>}
 					</CardContent>
 					<CardFooter>
 						<PaginationCustom
 							currentPage={currentPage}
-							totalItems={totalArticle}
+							totalItems={totalCategories}
 							itemsPerPage={10}
 							onPageChange={setCurrentPage}
 						/>
