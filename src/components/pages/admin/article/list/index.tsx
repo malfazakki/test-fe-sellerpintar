@@ -13,8 +13,11 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useArticles, useCategories } from "@/hooks/queries/use-category";
 import { Article } from "@/types/articleTypes";
 import { Category } from "@/types/categoryTypes";
+import { useRouter } from "next/navigation";
 
 export default function AdminArticleList() {
+	const router = useRouter();
+
 	const [currentPage, setCurrentPage] = useState(1);
 
 	// Search and filter state
@@ -48,14 +51,14 @@ export default function AdminArticleList() {
 		isError: isErrorCategories,
 		error: categoriesError,
 	} = useCategories({
-		page: 1, // Fetch all categories for filter dropdown
+		page: 1,
 		limit: 100,
-		search: "", // No search needed for categories here
+		search: "",
 	});
 
-	const articles: Article[] = articlesData?.data || []; // Type assertion for articles
+	const articles: Article[] = articlesData?.data || [];
 	const totalArticle = articlesData?.total || 0;
-	const categories: Category[] = categoriesData?.data || []; // Type assertion for categories
+	const categories: Category[] = categoriesData?.data || [];
 
 	// Validate Categories
 	const validCategories = categories.filter(
@@ -65,11 +68,8 @@ export default function AdminArticleList() {
 	const categoryError = isErrorCategories ? categoriesError?.message : null;
 
 	const handleClickAdd = () => {
-		// Logic for adding article - not implemented in this snippet
-		console.log("Add Article clicked");
+		router.push("/admin/articles/create");
 	};
-
-	// No need for useEffect to trigger fetching anymore with React Query
 
 	return (
 		<>
