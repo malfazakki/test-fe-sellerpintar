@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ModalType = "success" | "error" | "custom" | "component" | "delete" | "confirmLogout" | null;
+type ModalType = "success" | "error" | "custom" | "component" | "delete" | "confirmLogout" | "categoryDialog" | null;
 
 // interface ErrorModalProps {
 // 	title?: string;

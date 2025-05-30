@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,71 +9,34 @@ import { AlertCircleIcon, Plus, Search } from "lucide-react";
 import CategoryListTable from "./table";
 import { PaginationCustom } from "@/components/custom-ui/pagination-custom";
 import { useDebounce } from "@/hooks/use-debounce";
-import { CategoriesApiResponse, Category } from "@/types/categoryTypes";
+import { useModalStore } from "@/store/modalStore";
+import { useCategories } from "@/hooks/queries/use-category";
 
 export default function AdminCategoryList() {
-	const [categories, setCategories] = useState<Category[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-	const [totalCategories, setTotalCategories] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	// Search state
 	const [searchQuery, setSearchQuery] = useState("");
 
+	const { openModal } = useModalStore();
+
 	// Debounce the search query with 500ms
 	const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
 	// Fetch categories with search and pagination
-	const fetchCategories = useCallback(async () => {
-		try {
-			setLoading(true);
-			const params = new URLSearchParams({
-				search: debouncedSearchQuery,
-				page: currentPage.toString(),
-				limit: "10",
-			});
+	const { data, isLoading, isError, error } = useCategories({
+		page: currentPage,
+		limit: 10,
+		search: debouncedSearchQuery,
+	});
 
-			const response = await fetch(`https://test-fe.mysellerpintar.com/api/categories?${params.toString()}`);
+	const categories = data?.data || [];
+	const totalCategories = data?.totalData || 0;
+	const loading = isLoading;
 
-			if (!response.ok) {
-				throw new Error(`Error fetching categories: ${response.statusText}`);
-			}
-
-			const data: CategoriesApiResponse = await response.json();
-
-			// Log the full API response for debugging
-			console.log("API Response:", {
-				data: data.data,
-				page: data.currentPage,
-				limit: data.limit,
-				total: data.totalData,
-			});
-
-			setCategories(data.data);
-			setTotalCategories(data.totalData);
-
-			// Ensure current page is within total pages
-			const totalPages = Math.ceil(data.totalData / data.limit);
-			if (currentPage > totalPages) {
-				setCurrentPage(totalPages || 1);
-			}
-
-			setError(null);
-		} catch (err) {
-			console.error("Failed to fetch categories:", err);
-			setError("Failed to load categories.");
-			setCategories([]);
-			setTotalCategories(0);
-		} finally {
-			setLoading(false);
-		}
-	}, [currentPage, debouncedSearchQuery]);
-
-	// Trigger fetch when search or page changes
-	useEffect(() => {
-		fetchCategories();
-	}, [fetchCategories]);
+	const handleClickAdd = () => {
+		openModal("categoryDialog", { type: "create" });
+	};
 
 	return (
 		<>
@@ -106,13 +69,13 @@ export default function AdminCategoryList() {
 								</div>
 							</div>
 
-							<Button variant='default' size='lg'>
+							<Button variant='default' size='lg' onClick={handleClickAdd}>
 								<Plus className='' />
 								Add Category
 							</Button>
 						</div>
 
-						{!error ? (
+						{!isError ? (
 							<CategoryListTable categories={categories} />
 						) : (
 							<div className='p-10'>
@@ -120,7 +83,11 @@ export default function AdminCategoryList() {
 									<AlertCircleIcon />
 									<AlertTitle>Unable to load categories.</AlertTitle>
 									<AlertDescription>
-										<p>Unknown error occured. Please contact administrator.</p>
+										{error ? (
+											<p>{error.message}</p>
+										) : (
+											<p>Unknown error occured. Please contact administrator.</p>
+										)}
 									</AlertDescription>
 								</Alert>
 							</div>
@@ -133,7 +100,7 @@ export default function AdminCategoryList() {
 						)}
 					</CardContent>
 					<CardFooter>
-						{!error && !loading ? (
+						{!isError && !loading ? (
 							<PaginationCustom
 								currentPage={currentPage}
 								totalItems={totalCategories}
