@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { useModalStore } from "@/store/modalStore";
 import { useEffect, useState } from "react";
-import { ConfirmLogout } from "@/components/custom-ui/confirm-logout";
+import { ConfirmLogout } from "@/components/custom-ui/confirm-logout-dialog";
+import { DeleteDialog } from "../custom-ui/delete-dialog";
 
 export function GlobalDialog() {
 	const { isOpen, modalType, modalProps, closeModal } = useModalStore();
@@ -82,6 +83,8 @@ export function GlobalDialog() {
 						</DialogContent>
 					</>
 				);
+			case "delete":
+				return <DeleteDialog modalProps={modalProps} />;
 			case "confirmLogout":
 				return <ConfirmLogout />;
 			default:

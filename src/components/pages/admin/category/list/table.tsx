@@ -5,12 +5,33 @@ import dayjs from "dayjs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Link from "next/link";
 import { Category } from "@/types/categoryTypes";
+import { useModalStore } from "@/store/modalStore";
+import { useRouter } from "next/navigation";
+import api from "@/lib/api";
 
 interface ArticleListTableProps {
 	categories: Category[];
 }
 
 export default function CategoryListTable({ categories }: ArticleListTableProps) {
+	const { openModal } = useModalStore();
+	const router = useRouter();
+
+	const deleteData = async (id: string | number) => {
+		await api.delete(`/categories/${id}`);
+		router.refresh();
+	};
+
+	const handleDelete = (id: string | number, name: string) => {
+		openModal("delete", {
+			title: "Delete Category",
+			description: `Delete category "${name}"? This will remove it from master data permanently.`,
+			onDelete: () => deleteData(id),
+		});
+	};
+
+	// console.log("Category ID: ", categories?.[0].id);
+
 	return (
 		<>
 			<Table className='border-b-1'>
@@ -37,7 +58,12 @@ export default function CategoryListTable({ categories }: ArticleListTableProps)
 								>
 									Edit
 								</Link>
-								<button className='text-red-600 cursor-pointer underline'>Delete</button>
+								<button
+									className='text-red-600 cursor-pointer underline'
+									onClick={() => handleDelete(category.id, category.name)}
+								>
+									Delete
+								</button>
 							</TableCell>
 						</TableRow>
 					))}
