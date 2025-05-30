@@ -13,10 +13,14 @@ import { LoginFormData, loginSchema } from "@/lib/validation/login.validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useModalStore } from "@/store/modalStore";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
 
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const { openModal } = useModalStore();
+	const router = useRouter();
+	const { setAuth } = useAuthStore();
 
 	const {
 		register,
@@ -32,10 +36,21 @@ export default function LoginForm() {
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
-			console.log("Form submitted:", data);
-
 			const response = await axios.post("https://test-fe.mysellerpintar.com/api/auth/login", data);
+
 			console.log("Login successful:", response.data);
+
+			// Simpan token dan data user ke global store
+			if (response.data.token && response.data.role) {
+				setAuth(response.data.token, response.data.user);
+			}
+
+			// Redirect ke halaman utama atau dashboard berdasarkan role
+			if (response.data.role === "User") {
+				router.push("/");
+			} else {
+				router.push("/admin/articles");
+			}
 		} catch (error: any) {
 			console.error("Login failed:", error);
 			let errorMessage = "An unexpected error occurred.";

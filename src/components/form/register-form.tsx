@@ -14,10 +14,12 @@ import { RegisterFormData, registerSchema } from "@/lib/validation/register.vali
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useModalStore } from "@/store/modalStore";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const { openModal } = useModalStore();
+	const router = useRouter();
 
 	const {
 		register,
@@ -41,6 +43,8 @@ export default function RegisterForm() {
 			const response = await axios.post("https://test-fe.mysellerpintar.com/api/auth/register", data);
 			console.log("Registration successful:", response.data);
 			openModal("success", { title: "Success", description: `Registration Success` });
+
+			router.push("/login");
 		} catch (error: any) {
 			console.error("Registration failed:", error);
 			if (axios.isAxiosError(error) && error.response) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Newspaper, Tag, LogOut } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
 	Sidebar,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuthStore } from "@/store/authStore";
 
 // Menu items.
 const items = [
@@ -32,6 +33,13 @@ const items = [
 
 export function AppSidebar() {
 	const pathname = usePathname();
+	const { clearAuth } = useAuthStore();
+	const router = useRouter();
+
+	const logout = () => {
+		clearAuth();
+		router.push("/login");
+	};
 	return (
 		<Sidebar>
 			<SidebarContent className='bg-primary '>
@@ -66,6 +74,7 @@ export function AppSidebar() {
 									tooltip={"Logout"}
 									size='default'
 									type='button'
+									onClick={logout}
 								>
 									<span>
 										<LogOut />

@@ -58,12 +58,28 @@ export function GlobalDialog() {
 							</DialogDescription>
 						</DialogHeader>
 						<DialogFooter>
-							<Button type='submit'>Close</Button>
+							<Button onClick={closeModal} variant='outline' className='w-full'>
+								Close
+							</Button>
 						</DialogFooter>
 					</>
 				)}
 
-				{/* Default content or handle other types */}
+				{modalType === "success" && (
+					<>
+						<DialogHeader>
+							<DialogTitle>{modalProps.title || "Success"}</DialogTitle>
+							<DialogDescription>
+								{modalProps.description || "This is a custom dialog."}
+							</DialogDescription>
+						</DialogHeader>
+						<DialogFooter>
+							<Button onClick={closeModal} variant='outline' className='w-full'>
+								Close
+							</Button>
+						</DialogFooter>
+					</>
+				)}
 			</DialogContent>
 		</Dialog>
 	);
