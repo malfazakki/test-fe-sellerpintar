@@ -40,3 +40,19 @@ export const useArticleById = ({ id }: { id: string }) => {
 		enabled: !!id,
 	});
 };
+
+export const useRecentArticles = (currentArticleId: string) => {
+	return useQuery({
+		queryFn: async (): Promise<{ data: Article[]; total: number }> => {
+			const queryParams = new URLSearchParams({
+				page: "1",
+				limit: "3",
+				excludeId: currentArticleId,
+			});
+			const response = await api.get(`/articles/?${queryParams.toString()}`);
+			return response.data;
+		},
+		queryKey: ["recent-articles", currentArticleId],
+		enabled: !!currentArticleId,
+	});
+};

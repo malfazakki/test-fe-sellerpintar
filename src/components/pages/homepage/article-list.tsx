@@ -54,6 +54,7 @@ interface ArticleListProps {
 	onPageChange: (page: number) => void;
 	currentPage: number;
 	isLoading?: boolean;
+	hidePagination?: boolean;
 }
 
 // Skeleton Card Component
@@ -79,6 +80,7 @@ export default function ArticleList({
 	onPageChange,
 	currentPage,
 	isLoading = false,
+	hidePagination = false,
 }: ArticleListProps) {
 	const itemsPerPage = 9; // Match the current grid layout
 
@@ -99,12 +101,16 @@ export default function ArticleList({
 	// Existing render logic for articles
 	return (
 		<div className='container mx-auto px-4 py-10 space-y-6'>
-			{/* Total Articles */}
-			<div>
-				<p className='text-sm'>
-					Showing: {articles.length} of {totalArticles} articles
-				</p>
-			</div>
+			{!hidePagination ? (
+				<>
+					{/* Total Articles */}
+					<div>
+						<p className='text-sm'>
+							Showing: {articles.length} of {totalArticles} articles
+						</p>
+					</div>
+				</>
+			) : null}
 
 			{/* Articles Grid */}
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[40px] gap-y-[60px]'>
@@ -156,17 +162,21 @@ export default function ArticleList({
 				))}
 			</div>
 
-			{/* Pagination */}
-			{totalArticles > itemsPerPage && (
-				<div className='flex justify-center mt-16'>
-					<PaginationCustom
-						currentPage={currentPage}
-						totalItems={totalArticles}
-						itemsPerPage={itemsPerPage}
-						onPageChange={onPageChange}
-					/>
-				</div>
-			)}
+			{!hidePagination ? (
+				<>
+					{/* Pagination */}
+					{totalArticles > itemsPerPage && (
+						<div className='flex justify-center mt-16'>
+							<PaginationCustom
+								currentPage={currentPage}
+								totalItems={totalArticles}
+								itemsPerPage={itemsPerPage}
+								onPageChange={onPageChange}
+							/>
+						</div>
+					)}
+				</>
+			) : null}
 		</div>
 	);
 }

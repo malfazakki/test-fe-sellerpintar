@@ -2,16 +2,22 @@
 
 import Image from "next/image";
 import { useArticleById } from "@/hooks/queries/use-articles";
+import { useRecentArticles } from "@/hooks/queries/use-articles";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dayjs from "dayjs";
+import ArticleList from "@/components/pages/homepage/article-list";
 
 export function ArticleDetailComp() {
 	const params = useParams();
 	const articleId = params.id as string;
 
 	const { data: article, isLoading, error } = useArticleById({ id: articleId });
+
+	const { data: recentArticles, isLoading: isLoadingRecent } = useRecentArticles(articleId);
+
+	const dataRecentArticles = recentArticles?.data?.slice(0, 3) || [];
 
 	if (isLoading) {
 		return (
@@ -75,6 +81,20 @@ export function ArticleDetailComp() {
 					className='prose lg:prose-xl max-w-none'
 					dangerouslySetInnerHTML={{ __html: article.content }}
 				/>
+				{/* Other Articles Section */}
+				{dataRecentArticles && dataRecentArticles.length > 0 && (
+					<div className='container mx-auto'>
+						<h2 className='text-xl font-bold mb-[-20px] mx-4 text-left mt-30'>Other Articles</h2>
+						<ArticleList
+							articles={dataRecentArticles}
+							totalArticles={dataRecentArticles.length}
+							currentPage={1}
+							onPageChange={() => {}}
+							isLoading={isLoadingRecent}
+							hidePagination
+						/>
+					</div>
+				)}
 			</div>
 		</>
 	);
