@@ -24,3 +24,17 @@ export const useArticles = (params: UseArticlesParams) => {
 		queryKey: ["articles", params.page, params.limit, params.title, params.category],
 	});
 };
+
+interface UseArticleByIdParams {
+	id: string | number;
+}
+
+export const useArticleById = (params: UseArticleByIdParams) => {
+	return useQuery({
+		queryKey: ["article", params.id],
+		queryFn: async (): Promise<any> => {
+			const response = await api.get(`/articles/${params.id}`);
+			return response.data;
+		},
+	});
+};

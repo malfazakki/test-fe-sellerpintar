@@ -1,19 +1,25 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 import { ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface FileUploadProps extends ControllerRenderProps {
 	className?: string;
 	accept?: string;
+	imageUrl?: string;
 }
 
-export function FileUpload({ onChange, className, accept = ".jpg,.jpeg,.png" }: FileUploadProps) {
-	const [preview, setPreview] = useState<string | null>(null);
+export function FileUpload({ onChange, className, accept = ".jpg,.jpeg,.png", imageUrl }: FileUploadProps) {
+	const [preview, setPreview] = useState<string | null>(imageUrl || null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		setPreview(imageUrl || null);
+	}, [imageUrl]);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -51,7 +57,13 @@ export function FileUpload({ onChange, className, accept = ".jpg,.jpeg,.png" }: 
 
 			{preview ? (
 				<div className='relative'>
-					<img src={preview} alt='File preview' className='w-full h-[150px] object-cover rounded-lg mb-2' />
+					<Image
+						src={preview}
+						alt='File preview'
+						width={100}
+						height={100}
+						className='w-full h-[150px] object-cover rounded-lg mb-2'
+					/>
 					<div className='flex space-x-2'>
 						<Button
 							type='button'
