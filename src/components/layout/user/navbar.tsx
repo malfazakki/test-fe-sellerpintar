@@ -43,7 +43,7 @@ export default function NavbarUser() {
 		}
 	);
 
-	const logoClassName = cn("transition-all duration-300", {
+	const logoClassName = cn("transition-all duration-300 cursor-pointer", {
 		"": !(isHomePage && !isScrolled),
 		"invert brightness-0 contrast-200": isHomePage && !isScrolled,
 	});
@@ -61,7 +61,15 @@ export default function NavbarUser() {
 		<>
 			<nav className={navbarClassName}>
 				<div className='flex items-center gap-3'>
-					<Image src='/assets/image/logo.svg' alt='Logo' width={134} height={24} className={logoClassName} />
+					<Link href='/'>
+						<Image
+							src='/assets/image/logo.svg'
+							alt='Logo'
+							width={134}
+							height={24}
+							className={logoClassName}
+						/>
+					</Link>
 				</div>
 
 				{data && !isLoading && !isError ? (

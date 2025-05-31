@@ -2,10 +2,12 @@
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useProfile } from "@/hooks/queries/use-profile";
 import Link from "next/link";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
 interface RootLayoutAdminProps {
 	children: ReactNode;
@@ -14,6 +16,32 @@ interface RootLayoutAdminProps {
 
 export default function AdminLayout({ children, headerTitle }: RootLayoutAdminProps) {
 	const { data, isLoading, isError } = useProfile();
+
+	const { isAuthenticated, role } = useAuthStore();
+	const [isClient, setIsClient] = useState(false);
+
+	const router = useRouter();
+
+	useEffect(() => {
+		setIsClient(true);
+
+		// Redirect to login if not authenticated
+		if (!isAuthenticated) {
+			router.replace("/login");
+			return;
+		}
+
+		// Redirect if role is not "User"
+		if (role !== "Admin") {
+			router.replace("/");
+			return;
+		}
+	}, [isAuthenticated, role, router]);
+
+	// If not authenticated, wrong role, or not yet client-side, render nothing
+	if (!isClient || !isAuthenticated || role !== "Admin") {
+		return null;
+	}
 
 	return (
 		<SidebarProvider>

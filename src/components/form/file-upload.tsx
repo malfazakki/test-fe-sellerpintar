@@ -10,7 +10,7 @@ import Image from "next/image";
 interface FileUploadProps extends ControllerRenderProps {
 	className?: string;
 	accept?: string;
-	imageUrl?: string;
+	imageUrl?: string | null | undefined;
 }
 
 export function FileUpload({ onChange, className, accept = ".jpg,.jpeg,.png", imageUrl }: FileUploadProps) {
