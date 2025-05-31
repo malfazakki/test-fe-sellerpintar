@@ -1,11 +1,11 @@
 "use client";
 
-import CreateArticleForm from "@/components/form/create-article-form";
+import EditArticleForm from "@/components/form/edit-article-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function CreateArticleComp() {
+export function EditArticleComp() {
 	const router = useRouter();
 	return (
 		<>
@@ -18,13 +18,13 @@ export function CreateArticleComp() {
 									onClick={() => router.push("/admin/articles")}
 									className='hover:cursor-pointer hover:opacity-70 hover:bg-slate-50 rounded-lg'
 								/>{" "}
-								<p className='text-xl'>Create Articles</p>
+								<p className='text-xl'>Edit Articles</p>
 							</div>
 						</CardTitle>
 					</CardHeader>
 
 					<CardContent>
-						<CreateArticleForm />
+						<EditArticleForm />
 					</CardContent>
 				</Card>
 			</div>

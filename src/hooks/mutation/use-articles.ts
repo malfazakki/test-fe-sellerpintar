@@ -53,10 +53,11 @@ export function useEditArticle(articleId: string) {
 
 	return useMutation({
 		mutationFn: async (data: ArticleFormData) => {
-			let imageUrl = null;
+			let finalImageUrl: string | null = null;
 
-			// Upload gambar jika ada
-			if (data.imageUrl) {
+			// Determine if imageUrl is a new file or an existing string URL
+			if (data.imageUrl instanceof File) {
+				// New file upload
 				const formData = new FormData();
 				formData.append("image", data.imageUrl);
 
@@ -67,8 +68,14 @@ export function useEditArticle(articleId: string) {
 				});
 
 				if (uploadResponse.data?.imageUrl) {
-					imageUrl = uploadResponse.data.imageUrl;
+					finalImageUrl = uploadResponse.data.imageUrl;
 				}
+			} else if (typeof data.imageUrl === "string") {
+				// Existing image URL
+				finalImageUrl = data.imageUrl;
+			} else {
+				// No image (null/undefined)
+				finalImageUrl = null;
 			}
 
 			// Kirim data JSON ke endpoint artikel
@@ -76,7 +83,7 @@ export function useEditArticle(articleId: string) {
 				title: data.title,
 				content: data.content,
 				categoryId: data.categoryId,
-				imageUrl,
+				imageUrl: finalImageUrl,
 			};
 
 			return api.put(`/articles/${articleId}`, jsonData);
