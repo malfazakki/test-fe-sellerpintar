@@ -1,70 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useProfile } from "@/hooks/queries/use-profile";
-import Image from "next/image";
-import Link from "next/link";
-import { ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import NavbarUser from "./navbar";
+import FooterUser from "./footer";
+import { useAuthStore } from "@/store/authStore";
 
 export default function UserLayout({ children }: { children: ReactNode }) {
-	const [isScrolled, setIsScrolled] = useState(false);
-	const pathname = usePathname();
-	const { data, isLoading, isError } = useProfile();
+	const router = useRouter();
+	const { isAuthenticated, role } = useAuthStore();
+	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 50);
-		};
+		setIsClient(true);
 
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
-
-	const isHomePage = pathname === "/";
-	const navbarClassName = cn(
-		"flex h-[68px] shrink-0 items-center gap-2 px-10 fixed top-0 right-0 left-0 w-full z-30 justify-between transition-all duration-300",
-		{
-			"bg-transparent": isHomePage && !isScrolled,
-			"bg-white shadow-sm": isHomePage ? isScrolled : true,
+		// Redirect to login if not authenticated
+		if (!isAuthenticated) {
+			router.replace("/login");
+			return;
 		}
-	);
 
-	const logoClassName = cn("transition-all duration-300", {
-		"": !(isHomePage && !isScrolled),
-		"invert brightness-0 contrast-200": isHomePage && !isScrolled,
-	});
+		// Redirect if role is not "User"
+		if (role !== "User") {
+			router.replace("/login");
+			return;
+		}
+	}, [isAuthenticated, role, router]);
 
-	const textClassName = cn("text-sm font-medium leading-none hover:underline transition-all duration-300", {
-		"text-white": isHomePage && !isScrolled,
-		"text-blue-900": !(isHomePage && !isScrolled),
-	});
+	// If not authenticated, wrong role, or not yet client-side, render nothing
+	if (!isClient || !isAuthenticated || role !== "User") {
+		return null;
+	}
 
 	return (
-		<>
-			<nav className={navbarClassName}>
-				<div className='flex items-center gap-3'>
-					<Image src='/assets/image/logo.svg' alt='Logo' width={134} height={24} className={logoClassName} />
-				</div>
-
-				{data && !isLoading && !isError ? (
-					<div className='flex items-center gap-[6px]'>
-						<Avatar className='w-8 h-8'>
-							<AvatarFallback className={cn("font-bold bg-blue-200 text-blue-900")}>
-								{data.username.charAt(0).toUpperCase()}
-							</AvatarFallback>
-						</Avatar>
-						<div>
-							<Link href={"/profile"} className={textClassName}>
-								{data.username}
-							</Link>
-						</div>
-					</div>
-				) : null}
-			</nav>
-			<main>{children}</main>
-		</>
+		<div className='flex flex-col min-h-screen'>
+			<NavbarUser />
+			<main className='flex-grow flex flex-col'>{children}</main>
+			<FooterUser />
+		</div>
 	);
 }

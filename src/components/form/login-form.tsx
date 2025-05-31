@@ -40,9 +40,9 @@ export default function LoginForm() {
 
 			console.log("Login successful:", response.data);
 
-			// Simpan token dan data user ke global store
+			// Simpan token dan role ke global store
 			if (response.data.token && response.data.role) {
-				setAuth(response.data.token, response.data.user);
+				setAuth(response.data.token, response.data.role);
 			}
 
 			// Redirect ke halaman utama atau dashboard berdasarkan role

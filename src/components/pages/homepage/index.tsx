@@ -96,6 +96,7 @@ export default function HomepageComp() {
 				totalArticles={articlesData?.total || 0}
 				currentPage={filterState.currentPage}
 				onPageChange={handlePageChange}
+				isLoading={isLoadingArticles}
 			/>
 		</>
 	);

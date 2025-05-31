@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
 import { Article } from "@/types/articleTypes";
-import { Button } from "@/components/ui/button";
+import { PaginationCustom } from "@/components/custom-ui/pagination-custom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Function to convert HTML to plain text
 function htmlToPlainText(html: string): string {
@@ -52,13 +53,59 @@ interface ArticleListProps {
 	totalArticles: number;
 	onPageChange: (page: number) => void;
 	currentPage: number;
+	isLoading?: boolean;
 }
 
-export default function ArticleList({ articles, totalArticles, onPageChange, currentPage }: ArticleListProps) {
-	const totalPages = Math.ceil(totalArticles / 9);
-
+// Skeleton Card Component
+export function ArticleCardSkeleton() {
 	return (
-		<div className='container mx-auto px-4 py-8'>
+		<div className='space-y-3'>
+			<Skeleton className='h-[240px] w-full rounded-[12px]' />
+			<div className='space-y-2'>
+				<Skeleton className='h-4 w-2/3' />
+				<Skeleton className='h-5 w-full' />
+				<Skeleton className='h-4 w-full' />
+				<div className='flex items-center justify-between mt-4'>
+					<Skeleton className='h-7 w-24 rounded-full' />
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export default function ArticleList({
+	articles,
+	totalArticles,
+	onPageChange,
+	currentPage,
+	isLoading = false,
+}: ArticleListProps) {
+	const itemsPerPage = 9; // Match the current grid layout
+
+	// Render skeleton cards when loading
+	if (isLoading) {
+		return (
+			<div className='container mx-auto px-4 py-10 space-y-6'>
+				<Skeleton className='h-5 w-1/3' />
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[40px] gap-y-[60px]'>
+					{Array.from({ length: itemsPerPage }).map((_, index) => (
+						<ArticleCardSkeleton key={index} />
+					))}
+				</div>
+			</div>
+		);
+	}
+
+	// Existing render logic for articles
+	return (
+		<div className='container mx-auto px-4 py-10 space-y-6'>
+			{/* Total Articles */}
+			<div>
+				<p className='text-sm'>
+					Showing: {articles.length} of {totalArticles} articles
+				</p>
+			</div>
+
 			{/* Articles Grid */}
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-[40px] gap-y-[60px]'>
 				{articles.map((article) => (
@@ -110,18 +157,14 @@ export default function ArticleList({ articles, totalArticles, onPageChange, cur
 			</div>
 
 			{/* Pagination */}
-			{totalPages > 1 && (
-				<div className='flex justify-center mt-8 space-x-2'>
-					{[...Array(totalPages)].map((_, index) => (
-						<Button
-							key={index}
-							variant={currentPage === index + 1 ? "default" : "outline"}
-							onClick={() => onPageChange(index + 1)}
-							className='px-4'
-						>
-							{index + 1}
-						</Button>
-					))}
+			{totalArticles > itemsPerPage && (
+				<div className='flex justify-center mt-16'>
+					<PaginationCustom
+						currentPage={currentPage}
+						totalItems={totalArticles}
+						itemsPerPage={itemsPerPage}
+						onPageChange={onPageChange}
+					/>
 				</div>
 			)}
 		</div>
