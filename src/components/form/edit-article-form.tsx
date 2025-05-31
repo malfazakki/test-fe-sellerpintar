@@ -124,7 +124,7 @@ export default function EditArticleForm() {
 				<Controller
 					name='imageUrl'
 					control={control}
-					render={({ field }) => <FileUpload {...field} imageUrl={articleData.imageUrl} />}
+					render={({ field }) => <FileUpload {...field} imageUrl={articleData?.imageUrl} />}
 				/>
 				{errors?.imageUrl && (
 					<div className='flex items-center text-red-500 text-sm'>

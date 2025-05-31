@@ -1,5 +1,6 @@
 import api from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import { Article } from "@/types/articleTypes";
 
 interface UseArticlesParams {
 	page: number;
@@ -25,16 +26,17 @@ export const useArticles = (params: UseArticlesParams) => {
 	});
 };
 
-interface UseArticleByIdParams {
-	id: string | number;
-}
+export const useArticleById = ({ id }: { id: string }) => {
+	const fetchArticleById = async () => {
+		if (!id) throw new Error("Article ID is required");
 
-export const useArticleById = (params: UseArticleByIdParams) => {
+		const { data } = await api.get<Article>(`/articles/${id}`);
+		return data;
+	};
+
 	return useQuery({
-		queryKey: ["article", params.id],
-		queryFn: async (): Promise<any> => {
-			const response = await api.get(`/articles/${params.id}`);
-			return response.data;
-		},
+		queryKey: ["article", id],
+		queryFn: fetchArticleById,
+		enabled: !!id,
 	});
 };
