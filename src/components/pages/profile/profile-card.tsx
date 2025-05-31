@@ -59,8 +59,11 @@ export default function ProfileCard() {
 					</div>
 				</div>
 
-				<Button onClick={() => router.push("/admin/articles")} className='w-full mt-4'>
-					Back to dashboard
+				<Button
+					onClick={() => router.push(`${data.role === "Admin" ? "/admin/articles" : "/"}`)}
+					className='w-full mt-4'
+				>
+					Back to {data.role === "Admin" ? "dashboard" : "home"}
 				</Button>
 			</CardContent>
 		</Card>
