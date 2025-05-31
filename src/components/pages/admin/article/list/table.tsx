@@ -5,12 +5,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { Article } from "@/types/articleTypes";
 import dayjs from "dayjs";
+import api from "@/lib/api";
+import { useModalStore } from "@/store/modalStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ArticleListTableProps {
 	articles: Article[];
 }
 
 export default function ArticleListTable({ articles }: ArticleListTableProps) {
+	const queryClient = useQueryClient();
+	const { openModal } = useModalStore();
+
+	const deleteData = async (id: string | number) => {
+		await api.delete(`/articles/${id}`);
+		queryClient.invalidateQueries({ queryKey: ["articles"] });
+	};
+	const handleDelete = (id: string | number) => {
+		openModal("delete", {
+			title: "Delete Articles",
+			description: `Deleting this article is permanent and cannot be undone. All related content will be removed.`,
+			onDelete: () => deleteData(id),
+		});
+	};
+
 	return (
 		<>
 			<Table className='border-b-1'>
@@ -55,7 +73,12 @@ export default function ArticleListTable({ articles }: ArticleListTableProps) {
 								>
 									Edit
 								</Link>
-								<button className='text-red-600 cursor-pointer hover:underline'>Delete</button>
+								<button
+									onClick={() => handleDelete(article.id)}
+									className='text-red-600 cursor-pointer hover:underline'
+								>
+									Delete
+								</button>
 							</TableCell>
 						</TableRow>
 					))}
