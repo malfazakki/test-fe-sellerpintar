@@ -221,9 +221,9 @@ export default function EditArticleForm() {
 				<Button type='button' variant='outline' onClick={() => router.push("/admin/articles")}>
 					Cancel
 				</Button>
-				<Button type='button' variant='default' className='bg-slate-200 !text-black hover:bg-slate-300'>
+				{/* <Button type='button' variant='default' className='bg-slate-200 !text-black hover:bg-slate-300'>
 					Preview
-				</Button>
+				</Button> */}
 				<Button type='submit' disabled={isPending}>
 					{isPending ? "Uploading..." : "Upload"}
 				</Button>
