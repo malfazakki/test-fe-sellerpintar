@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -49,6 +51,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Start typing...
 				class: "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[400px] p-4",
 			},
 		},
+		immediatelyRender: false,
 	});
 
 	useEffect(() => {
@@ -154,10 +157,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Start typing...
 
 			{/* Editor Content */}
 			<div className='min-h-[400px] bg-white'>
-				<EditorContent
-					editor={editor}
-					className=' rounded-b-lg'
-				/>
+				<EditorContent editor={editor} className=' rounded-b-lg' />
 			</div>
 
 			{/* Word Count */}

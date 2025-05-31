@@ -13,9 +13,23 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "./file-upload";
 import Link from "next/link";
 import { RichTextEditor } from "@/components/editor/tiptap";
+import { useCategories } from "@/hooks/queries/use-category";
+import { Category } from "@/types/categoryTypes";
 
 export default function CreateArticleForm() {
 	const router = useRouter();
+
+	// Fetch categories using useCategories hook
+	const {
+		data: categoriesData,
+		// isLoading: isLoadingCategories,
+		// isError: isErrorCategories,
+		// error: categoriesError,
+	} = useCategories({
+		page: 1,
+		limit: 100,
+		search: "",
+	});
 
 	const {
 		register,
@@ -35,26 +49,51 @@ export default function CreateArticleForm() {
 	const queryClient = useQueryClient();
 
 	const onSubmit = async (data: ArticleFormData) => {
-		// Create FormData to handle file upload
-		const formData = new FormData();
-		formData.append("title", data.title);
-		formData.append("content", data.content || "");
-		formData.append("categoryId", data.categoryId);
+		try {
+			let imageUrl = null;
 
-		// Append file if exists
-		if (data.imageUrl) {
-			formData.append("imageUrl", data.imageUrl);
+			// Upload gambar jika ada
+			if (data.imageUrl) {
+				const formData = new FormData();
+				formData.append("image", data.imageUrl);
+
+				const uploadResponse = await api.post("https://test-fe.mysellerpintar.com/api/upload", formData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				});
+
+				if (uploadResponse.data && uploadResponse.data.imageUrl) {
+					imageUrl = uploadResponse.data.imageUrl;
+				}
+			}
+
+			// Kirim data JSON ke endpoint artikel
+			const jsonData = {
+				title: data.title,
+				content: data.content,
+				categoryId: data.categoryId,
+				imageUrl: imageUrl,
+			};
+
+			console.log("jsonData: ", jsonData);
+
+			await api.post("/articles", jsonData);
+
+			// Invalidate query dan redirect
+			queryClient.invalidateQueries({ queryKey: ["articles"] });
+			router.push("/admin/articles");
+		} catch (error) {
+			console.error("Error submitting form:", error);
 		}
-
-		await api.post("/articles", formData, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		});
-
-		queryClient.invalidateQueries({ queryKey: ["articles"] });
-		router.push("/admin/articles");
 	};
+
+	const categories: Category[] = categoriesData?.data || [];
+
+	// Validate Categories
+	const validCategories = categories.filter(
+		(category: Category) => category.id !== null && category.id !== undefined && category.id !== ""
+	);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
@@ -99,15 +138,26 @@ export default function CreateArticleForm() {
 				<Label htmlFor='categoryId' className='text-sm font-medium'>
 					Category
 				</Label>
-				<Select onValueChange={(value) => register("categoryId").onChange({ target: { value } })}>
-					<SelectTrigger className={`w-full bg-white`}>
-						<SelectValue placeholder='Select category' />
-					</SelectTrigger>
-					<SelectContent>
-						{/* Add category items here dynamically */}
-						<SelectItem value='placeholder-category-id'>Placeholder Category</SelectItem>
-					</SelectContent>
-				</Select>
+				{/* Wrap Select with Controller */}
+				<Controller
+					name='categoryId'
+					control={control}
+					render={({ field }) => (
+						<Select onValueChange={field.onChange} value={field.value}>
+							<SelectTrigger className={`w-full bg-white ${errors.categoryId ? "border-red-500" : ""}`}>
+								<SelectValue placeholder='Select category' />
+							</SelectTrigger>
+							<SelectContent>
+								{/* Map categories to SelectItem components */}
+								{validCategories.map((category) => (
+									<SelectItem key={category.id} value={category.id}>
+										{category.name}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					)}
+				/>
 
 				{errors.categoryId ? (
 					<div className='flex items-center text-red-500 text-sm'>
