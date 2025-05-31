@@ -30,10 +30,9 @@ export default function HomepageComp() {
 		data: articlesData,
 		isLoading: isLoadingArticles,
 		isError: isErrorArticles,
-		error: articlesError,
 	} = useArticles({
 		page: filterState.currentPage,
-		limit: 10,
+		limit: 9,
 		title: debouncedSearchQuery,
 		category: categoryId,
 	});
@@ -43,7 +42,6 @@ export default function HomepageComp() {
 		data: categoriesData,
 		isLoading: isLoadingCategories,
 		isError: isErrorCategories,
-		error: categoriesError,
 	} = useCategories({
 		page: 1,
 		limit: 100,
@@ -67,6 +65,13 @@ export default function HomepageComp() {
 		}));
 	};
 
+	const handlePageChange = (page: number) => {
+		setFilterState((prev) => ({
+			...prev,
+			currentPage: page,
+		}));
+	};
+
 	// Prepare props for child components
 	const filterProps = {
 		state: filterState,
@@ -86,11 +91,12 @@ export default function HomepageComp() {
 	return (
 		<>
 			<HeroSectionHomepage {...filterProps} />
-			{/* Uncomment and implement ArticleList when ready */}
-			{/* <ArticleList 
-				articles={articlesData?.data || []} 
+			<ArticleList
+				articles={articlesData?.data || []}
 				totalArticles={articlesData?.total || 0}
-			/> */}
+				currentPage={filterState.currentPage}
+				onPageChange={handlePageChange}
+			/>
 		</>
 	);
 }

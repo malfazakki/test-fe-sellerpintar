@@ -36,21 +36,21 @@ export default function HeroSectionHomepage({
 			<div className='relative z-20 w-full px-4'>
 				{/* Text Content */}
 				<div className='text-white text-center max-w-[730px] mx-auto space-y-3'>
-					<h3 className='font-bold text-base'>Blog Genzet</h3>
-					<h1 className='font-medium text-5xl'>
+					<h3 className='font-bold text-xs sm:text-sm md:text-base'>Blog Genzet</h3>
+					<h1 className='font-medium text-3xl sm:text-4xl lg:text-5xl'>
 						The Journal : Design Resources, Interviews, and Industry News
 					</h1>
-					<h2 className='text-2xl'>Your daily dose of design insights!</h2>
+					<h2 className='text-base sm:text-xl lg:text-2xl'>Your daily dose of design insights!</h2>
 				</div>
 
 				{/* Filter Bar */}
-				<div className='flex gap-2 justify-center w-full mt-6 bg-blue-500 mx-auto rounded-lg max-w-[610px] p-[10px]'>
+				<div className='flex flex-col lg:flex-row gap-2 justify-center w-full mt-6 bg-blue-500 mx-auto rounded-lg max-w-[400px] lg:max-w-[610px] p-[10px]'>
 					<Select
 						value={state.selectedCategory}
 						onValueChange={(value) => onCategoryChange(value)}
 						disabled={isLoading.categories || isError.categories}
 					>
-						<SelectTrigger className='w-[180px] bg-white cursor-pointer'>
+						<SelectTrigger className='w-full lg:w-[180px] bg-white cursor-pointer'>
 							<SelectValue
 								placeholder={
 									categoryError
