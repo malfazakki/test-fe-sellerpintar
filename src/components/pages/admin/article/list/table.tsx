@@ -45,17 +45,17 @@ export default function ArticleListTable({ articles }: ArticleListTableProps) {
 							<TableCell className='text-center align-center'>
 								<Link
 									href={`/admin/articles/preview/${article.id}`}
-									className='text-blue-600 underline mr-2'
+									className='text-blue-600 hover:underline mr-2'
 								>
 									Preview
 								</Link>
 								<Link
 									href={`/admin/articles/edit/${article.id}`}
-									className='text-blue-600 underline mr-2'
+									className='text-blue-600 hover:underline mr-2'
 								>
 									Edit
 								</Link>
-								<button className='text-red-600 underline'>Delete</button>
+								<button className='text-red-600 cursor-pointer hover:underline'>Delete</button>
 							</TableCell>
 						</TableRow>
 					))}

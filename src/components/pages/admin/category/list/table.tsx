@@ -59,13 +59,13 @@ export default function CategoryListTable({ categories }: ArticleListTableProps)
 							<TableCell className='text-center align-center'>
 								<button
 									onClick={() => handleEdit(category.id, category.name)}
-									className='text-blue-600 cursor-pointer underline mr-2'
+									className='text-blue-600 cursor-pointer hover:underline mr-2'
 								>
 									Edit
 								</button>
 								<button
 									onClick={() => handleDelete(category.id, category.name)}
-									className='text-red-600 cursor-pointer underline'
+									className='text-red-600 cursor-pointer hover:underline'
 								>
 									Delete
 								</button>

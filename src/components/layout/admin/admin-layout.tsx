@@ -28,7 +28,7 @@ export default function AdminLayout({ children, headerTitle }: RootLayoutAdminPr
 						</div>
 					</div>
 				</header>
-				<main className='p-6'>{children}</main>
+				<main className='p-6 min-w-3xl'>{children}</main>
 			</SidebarInset>
 		</SidebarProvider>
 	);
