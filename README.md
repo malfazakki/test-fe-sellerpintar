@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Seller Pintar - Web Application
 
-## Getting Started
+## 📋 Project Overview
 
-First, run the development server:
+Seller Pintar is a comprehensive web application designed to streamline article management and user interactions with a robust, modern tech stack.
 
+## 🚀 Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS, ShadCN UI
+- **State Management**: React Server Components
+- **Form Handling**: React Hook Form
+- **Validation**: Zod
+
+### Backend
+- **Language**: TypeScript
+- **Server**: Express.js
+- **Architecture**: Modular, Clean Architecture
+
+## 📦 Prerequisites
+
+- Node.js (v18 or later)
+- npm (v9 or later)
+
+## 🔧 Installation
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/malfazakki/sellerpintar.git
+cd sellerpintar
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables
+- Copy `.env.example` to `.env`
+- Fill in the required environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌟 Running the Application
 
-## Learn More
+### Development Mode
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Production Build
+```bash
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📂 Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+sellerpintar/
+├── src/
+│   ├── app/                # Next.js routes and pages
+│   ├── components/         # Reusable UI components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility functions and validators
+│   └── store/              # State management
+├── public/                 # Static assets
+└── types/                  # TypeScript type definitions
+```
 
-## Deploy on Vercel
+## 🔐 Authentication
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Login/Register functionality
+- Protected routes for admin and user sections
+- Role-based access control
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌈 Features
+
+- Article Management
+  - Create, Edit, Preview articles
+  - Category management
+- User Profiles
+- Responsive Design
+- Server-side Rendering
+- Type-safe Development
+
+## 🧪 Testing
+
+```bash
+npm run test
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## 📞 Contact
+
+Your Name - your.email@example.com
+
+Project Link: [https://github.com/malfazakki/sellerpintar](https://github.com/malfazakki/sellerpintar)
