@@ -10,10 +10,11 @@ import { AlertCircleIcon, Plus, Search } from "lucide-react";
 import ArticleListTable from "./table";
 import { PaginationCustom } from "@/components/custom-ui/pagination-custom";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useArticles, useCategories } from "@/hooks/queries/use-category";
+import { useCategories } from "@/hooks/queries/use-category";
 import { Article } from "@/types/articleTypes";
 import { Category } from "@/types/categoryTypes";
 import { useRouter } from "next/navigation";
+import { useArticles } from "@/hooks/queries/use-articles";
 
 export default function AdminArticleList() {
 	const router = useRouter();
