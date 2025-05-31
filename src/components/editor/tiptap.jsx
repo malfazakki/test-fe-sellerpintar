@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
@@ -18,6 +18,7 @@ import {
 	RotateCcw,
 	RotateCw,
 } from "lucide-react";
+import CharacterCount from "@tiptap/extension-character-count";
 
 const ToolbarButton = ({ onClick, isActive, children, title }) => (
 	<button
@@ -33,6 +34,8 @@ const ToolbarButton = ({ onClick, isActive, children, title }) => (
 );
 
 export const RichTextEditor = ({ value, onChange, placeholder = "Start typing..." }) => {
+	const [wordCount, setWordCount] = useState(0);
+
 	const editor = useEditor({
 		extensions: [
 			StarterKit,
@@ -40,11 +43,15 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Start typing...
 			TextAlign.configure({
 				types: ["heading", "paragraph"],
 			}),
+			CharacterCount.configure({
+				mode: "word",
+			}),
 		],
 		content: value || "",
 		onUpdate: ({ editor }) => {
 			const html = editor.getHTML();
 			onChange(html);
+			setWordCount(editor.storage.characterCount.words());
 		},
 		editorProps: {
 			attributes: {
@@ -162,7 +169,7 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Start typing...
 
 			{/* Word Count */}
 			<div className='border-t border-gray-200 px-4 py-2 text-sm text-gray-500 bg-gray-50 rounded-b-lg'>
-				{editor.storage.characterCount?.words() || 0} Words
+				{wordCount} Words
 			</div>
 		</div>
 	);
